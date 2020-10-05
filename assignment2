@@ -1,0 +1,56 @@
+
+import pandas as pd
+import numpy
+import matplotlib.pyplot as plt
+
+
+data = pd.read_csv('gapminder.csv', low_memory=False)
+
+#lower-case all GapMinder column names
+data.columns = map(str.lower, data.columns)
+
+# bug fix for display formats to avoid run time errors
+pd.set_option('display.float_format', lambda x:'%f'%x)
+
+
+print(len(data)) #Number of observations (rows)
+print(len(data.columns)) #Number of variables (columns)
+
+
+#Convert data to numeric values
+
+data['internetuserate'] = pd.to_numeric(data.internetuserate, errors='coerce')
+data['incomeperperson'] = pd.to_numeric(data.incomeperperson, errors='coerce')
+data['employrate'] = pd.to_numeric(data.employrate, errors='coerce')
+
+
+print ('Counts for internet users % with access to the worldwide network, divided in 5 bins')
+c1 = data['internetuserate'].value_counts(sort=False, bins=5)
+print (c1)
+
+print ('Percentage for internet users % with access to the worldwide network, divided in 5 bins')
+p1 = data['internetuserate'].value_counts(sort=False, normalize=True, bins=5)
+print (p1)
+
+print ('Counts for Gross Domestic Product per capita in constant 2000 US$, divided in 5 bins')
+c2 = data['incomeperperson'].value_counts(sort=False, bins=5)
+print (c2)
+
+print ('Percentage for Gross Domestic Product per capita in constant 2000 US$, divided in 5 bins')
+p2 = data['incomeperperson'].value_counts(sort=False, normalize=True, bins=5)
+print (p2)
+
+print ('Counts of % of total population, age above 15, that has been employed, divided in 5 bins')
+c3 = data['employrate'].value_counts(sort=False, bins=5)
+print (c3)
+
+print ('% of total population, age above 15, that has been employed, divided in 5 bins')
+p3 = data['employrate'].value_counts(sort=False, normalize=True, bins=5)
+print (p3)
+
+
+#Only show results where internet use rate is >=60, 
+# income per person is >=6000 and internet use rate is >=60
+print('Only countries with internet use rate is above 60%, employment rate and income per person equal or more than 60 percent and 6000 USD respectively')
+sub1 = data[(data['internetuserate']>=60)  & (data['incomeperperson']>=6000) & (data['employrate']>=60)]
+print('segmented_list',sub1)
